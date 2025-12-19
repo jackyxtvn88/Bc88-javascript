@@ -21,7 +21,7 @@ for (let i = 0; i <= number.length; i++) {
 // .push () -> thêm phần tử vào cuối mảng
 console.log (` Mảng ban đầu: ${number}`);
 number.push(15);
-console,log (` Mảng sau khi thêm 15 vào cuối: ${number}`);
+console.log (` Mảng sau khi thêm 15 vào cuối: ${number}`);
 
 // .unshift -> thêm phần tử vào đầu mảng 
 number.unshift(3);

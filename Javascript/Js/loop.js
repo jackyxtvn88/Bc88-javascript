@@ -243,6 +243,7 @@ const inBanCoVua = size => {
             // tạo biến xác định màu của ô
             let isBlack = (row + col) % 2 === 0;
             td.className = isBlack ? "bg-black w-10 h-10": "bg-white w-10 h-10";
+            // do td là con của tr nên phải gắn td vào tr thêm appendChild
             tr.appendChild(td)
         }
         table.appendChild(tr)
