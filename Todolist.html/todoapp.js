@@ -51,17 +51,64 @@ const renderTasks = () => {
 
     const divActions = document.createElement("div");
     const btnEdit = document.createElement("button");
-    btnEdit.className = "p-2 bg-yellow-500 text-white rounded-md";
+    btnEdit.className = "p-2 bg-yellow-500 text-white rounded-md mr-2";
     btnEdit.innerText = "sửa";
     // append function để handle logic sửa task
     divActions.appendChild(btnEdit);
 
+    const btnDelete = document.createElement("button");
+    btnDelete.className = "p-2 bg-red-500 text-white rounded-md ";
+    btnDelete.innerText =" xóa";
+    // append function để handle logic xóa task
+    divActions.appendChild(btnDelete);
+
+    li.appendChild(divActions);
+
     document.getElementById("todoList").appendChild(li);
+
+    // handle hidden icon " không có task nào"
+    const noTaskDiv = document.getElementById("emptyState");
+    // dùng toán tử 3 ngôi để render
+    noTaskDiv.style.display = lisTasks.length ? "none": "block";
+    // 0: flase > 0: true
+    
   }
 };
 renderTasks();
 
 // tạo task mới
+
+//  bước1: tìm thẻ button thêm công việc
+const btnAdd = document.getElementById("addBtn");
+btnAdd.onclick = () => {
+// bước2: lấy giá trị từ thẻ input
+    const taskInput = document.getElementById("todoInput");
+    const newTask = taskInput.value;
+// bước3: thêm công việc vào mảng lisTasks
+    lisTasks.push(newTask);
+
+// xóa toàn bộ thẻ li hiện tại trong ul để 
+// tránh việc lặp lại khi render lại
+// inerHTML: thay đổi nội dung bên trong thẻ
+// setInterval
+// setInterval(() => {
+// document.getElementById("todoList").innerHTML = "";}, 2000;
+// );
+// setInterval(() => {
+//     renderTasks();
+// }, 2000;
+// );
+document.getElementById("todoList").innerHTML = ""
+renderTasks(); // re-render danh sách công việc
+
+// bước 4: xóa giá trị trong thẻ input sau khi thêm công việc
+taskInput.value = "";
+};
+
+// filter công việc theo trạng thái: tất cả, chưa hoàn thành, đã hoàn thành
+const filterTasksByStatus = () => {
+    // học OOP để có thể lưu trữ dữ liệu của task: id, tên công việc, trạng thái
+}
 
 //  update status công việc
 
