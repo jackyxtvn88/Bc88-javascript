@@ -1,7 +1,20 @@
+//  tạo đối tượng task
+class task{
+    constructor(id,name,status){
+        this.id = id;
+        this.name = name;
+        this.status = status;
+    }
+}
+
+// "[ID-1] Implement login",
+//   "[ID-2] Design database schema",
+//   "[ID-3] Set up  CI/CD pipeline",
+
 let lisTasks = [
-  "[ID-1] Implement login",
-  "[ID-2] Design database schema",
-  "[ID-3] Set up  CI/CD pipeline",
+    new task ("ID-1","Implement login", "todo"),
+    new task ("ID-2","Design database schema", "inprogress"),
+    new task ("ID-3","Set up  CI/CD pipeline", "done"),
 ];
 
 // hàm hiển thị danh sách công việc
@@ -44,7 +57,7 @@ const renderTasks = () => {
 
     const span = document.createElement("span");
     span.className = "font-semibold";
-    span.innerText = lisTasks[i];
+    span.innerText = lisTasks[i].name; //listTasks[i] = task("ID-1","Implement login", "todo")
     divInfo.appendChild(span);
 
     li.appendChild(divInfo);
