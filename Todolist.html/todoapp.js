@@ -57,7 +57,7 @@ const renderTasks = () => {
 
     const span = document.createElement("span");
     span.className = "font-semibold";
-    span.innerText = lisTasks[i].name; //listTasks[i] = task("ID-1","Implement login", "todo")
+    span.innerText = `${lisTasks[i].id} - ${lisTasks[i].name}`; //listTasks[i] = task("ID-1","Implement login", "todo")
     divInfo.appendChild(span);
 
     li.appendChild(divInfo);
@@ -98,7 +98,13 @@ btnAdd.onclick = () => {
     const taskInput = document.getElementById("todoInput");
     const newTask = taskInput.value;
 // bước3: thêm công việc vào mảng lisTasks
-    lisTasks.push(newTask);
+// listTasks.push(newTask);
+// tạo id tự động cho task mới
+// dựa vào cái số lượng phần tử hiện tại trong mảng
+    const newID = lisTasks.length + 1 ;
+    const TaskID = `ID-${newID}`;
+    const newTaskObj = new task(TaskID, newTask, "todo");
+    lisTasks.push(newTaskObj);
 
 // xóa toàn bộ thẻ li hiện tại trong ul để 
 // tránh việc lặp lại khi render lại
