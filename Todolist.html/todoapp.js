@@ -17,8 +17,39 @@ let lisTasks = [
     new task ("ID-3","Set up  CI/CD pipeline", "done"),
 ];
 
+let filterTask = [];
+
+// filter công việc theo trạng thái: tất cả, chưa hoàn thành, đã hoàn thành
+const filterTasksByStatus = () => {
+    // học OOP để có thể lưu trữ dữ liệu của task: id, tên công việc, trạng thái
+    //  kết hợp với hàm filter của mảng
+    // bước 1: lấy 3 cái button gồm có là: tất cả, chưa hoàn thành, đã hoàn thành
+    const btnAll = document.querySelectorAll(".filter-btn");
+    let currentFilter = "all"; // trạng thái lọc hiện tại
+    btnAll.forEach((btn) =>{
+        btn.onclick = () =>{
+            const status = btn.dataset.filter; // lấy giá trị từ thuộc tính data-filter
+            console.log("lọc theo trạng thái:", status);
+            currentFilter = status;
+            // let filterTask =[];
+            if (currentFilter === "all"){
+                filterTask = lisTasks;
+            } else if(currentFilter === "active"){
+                filterTask = lisTasks.filter((task) => task.status === "todo");
+            } else {
+                filterTask = lisTasks.filter((task) => task.status === "completed");
+            }
+        }
+    }
+       )
+    //    renderTasks();
+
+}
+
 // hàm hiển thị danh sách công việc
 const renderTasks = () => {
+
+    filterTasksByStatus();
   //   const li = document.createElement(`li`);
   // li.innerHTML = `<li class="flex item-center jusity-center bg-gray-100 p-4 rounded-lg">
   //                 <span class="font-semibold">[ID-1] Implement login</span>
@@ -30,7 +61,7 @@ const renderTasks = () => {
   //             let ul = document.getElementById("todolist");
   //             ul.appendChild(li);
   // //  render list task
-  for (let i = 0; i < lisTasks.length; i++) {
+  for (let i = 0; i < filterTask.length; i++) {
     const li = document.createElement(`li`);
     //  => <li></li>
     // <li class="flex item-center jusity-center bg-gray-100 p-4 rounded-lg">
@@ -124,10 +155,7 @@ renderTasks(); // re-render danh sách công việc
 taskInput.value = "";
 };
 
-// filter công việc theo trạng thái: tất cả, chưa hoàn thành, đã hoàn thành
-const filterTasksByStatus = () => {
-    // học OOP để có thể lưu trữ dữ liệu của task: id, tên công việc, trạng thái
-}
+
 
 //  update status công việc
 
