@@ -17,7 +17,7 @@ let lisTasks = [
     new task ("ID-3","Set up  CI/CD pipeline", "done"),
 ];
 
-let filterTask = [];
+let filterTask = lisTasks; // mảng lưu trữ công việc đã được lọc
 
 // filter công việc theo trạng thái: tất cả, chưa hoàn thành, đã hoàn thành
 const filterTasksByStatus = () => {
@@ -33,11 +33,11 @@ const filterTasksByStatus = () => {
             currentFilter = status;
             // let filterTask =[];
             if (currentFilter === "all"){
-                filterTask = lisTasks;
+                return  lisTasks;
             } else if(currentFilter === "active"){
-                filterTask = lisTasks.filter((task) => task.status === "todo");
+                return  lisTasks.filter((task) => task.status === "todo");
             } else {
-                filterTask = lisTasks.filter((task) => task.status === "completed");
+                return  lisTasks.filter((task) => task.status === "completed");
             }
         }
     }
@@ -49,7 +49,7 @@ const filterTasksByStatus = () => {
 // hàm hiển thị danh sách công việc
 const renderTasks = () => {
 
-    filterTasksByStatus();
+   let filterTask = filterTasksByStatus();
   //   const li = document.createElement(`li`);
   // li.innerHTML = `<li class="flex item-center jusity-center bg-gray-100 p-4 rounded-lg">
   //                 <span class="font-semibold">[ID-1] Implement login</span>
