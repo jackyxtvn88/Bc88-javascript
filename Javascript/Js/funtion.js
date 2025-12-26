@@ -30,7 +30,7 @@ const tinhBinhPhuong = number => number * number;
 document.getElementById("button-hinhChuNhat").onclick = () => {
     // lấy giá trị từ input
     let chieuDai = Number(document.getElementById("widthInput").value);
-    let chieuRong = Number(document.getElementById("heightInput").value);
+    let chieuRong = Number(document.getElemetnById("heightInput").value);
 
     // let chuVi = tinhChuViChuNhat(chieuDai, chieuRong);
     let chuVi = tinhChuVi(chieuDai, chieuRong);
