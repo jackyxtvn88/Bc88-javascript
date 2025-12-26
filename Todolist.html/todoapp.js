@@ -17,108 +17,98 @@ let lisTasks = [
     new task ("ID-3","Set up  CI/CD pipeline", "done"),
 ];
 
-let filterTask = lisTasks; // mảng lưu trữ công việc đã được lọc
+let currentFilter = "all"; // trạng thái lọc hiện tại
 
 // filter công việc theo trạng thái: tất cả, chưa hoàn thành, đã hoàn thành
 const filterTasksByStatus = () => {
-    // học OOP để có thể lưu trữ dữ liệu của task: id, tên công việc, trạng thái
-    //  kết hợp với hàm filter của mảng
-    // bước 1: lấy 3 cái button gồm có là: tất cả, chưa hoàn thành, đã hoàn thành
-    const btnAll = document.querySelectorAll(".filter-btn");
-    let currentFilter = "all"; // trạng thái lọc hiện tại
-    btnAll.forEach((btn) =>{
-        btn.onclick = () =>{
-            const status = btn.dataset.filter; // lấy giá trị từ thuộc tính data-filter
-            console.log("lọc theo trạng thái:", status);
-            currentFilter = status;
-            // let filterTask =[];
-            if (currentFilter === "all"){
-                return  lisTasks;
-            } else if(currentFilter === "active"){
-                return  lisTasks.filter((task) => task.status === "todo");
-            } else {
-                return  lisTasks.filter((task) => task.status === "completed");
-            }
-        }
+    if (currentFilter === "all") {
+        return [...lisTasks];
     }
-       )
-    //    renderTasks();
 
-}
+    if (currentFilter === "active") {
+        return lisTasks.filter((task) => task.status !== "done");
+    }
+
+    return lisTasks.filter((task) => task.status === "done");
+};
+
+const initFilterButtons = () => {
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    if (!filterButtons.length) return;
+
+    const updateButtonStyles = () => {
+        filterButtons.forEach((btn) => {
+            const isActive = btn.dataset.filter === currentFilter;
+            btn.classList.toggle("bg-blue-500", isActive);
+            btn.classList.toggle("text-white", isActive);
+            btn.classList.toggle("bg-gray-200", !isActive);
+            btn.classList.toggle("text-gray-700", !isActive);
+        });
+    };
+
+    filterButtons.forEach((btn) => {
+        btn.onclick = () => {
+            currentFilter = btn.dataset.filter;
+            const todoList = document.getElementById("todoList");
+            if (todoList) {
+                todoList.innerHTML = "";
+            }
+            updateButtonStyles();
+            renderTasks();
+        };
+    });
+
+    updateButtonStyles();
+};
 
 // hàm hiển thị danh sách công việc
 const renderTasks = () => {
+    const todoList = document.getElementById("todoList");
+    if (!todoList) return;
 
-   let filterTask = filterTasksByStatus();
-  //   const li = document.createElement(`li`);
-  // li.innerHTML = `<li class="flex item-center jusity-center bg-gray-100 p-4 rounded-lg">
-  //                 <span class="font-semibold">[ID-1] Implement login</span>
-  //                 <div>
-  //                      <button class="p-2 bg-yellow-500 text-white rounded-md">Sửa</button>
-  //                      <button class="p-2 bg-red-500 text-white rounded-md">Xóa</button>
-  //                 </div>
-  //              </li>`
-  //             let ul = document.getElementById("todolist");
-  //             ul.appendChild(li);
-  // //  render list task
-  for (let i = 0; i < filterTask.length; i++) {
-    const li = document.createElement(`li`);
-    //  => <li></li>
-    // <li class="flex item-center jusity-center bg-gray-100 p-4 rounded-lg">
-    //  <div>
-    //          <input type="checkbox" class="mr-2" />
-    //          <span class="font-semibold">${lisTasks[i]}</span>
-    // </div>
-    //              <div>
-    //                  <button class="p-2 bg-yellow-500 text-white rounded-md">Sửa</button>
-    //                  <button class="p-2 bg-red-500 text-white rounded-md">Xóa</button>
-    //             </div>
-    //            </li>
-    li.className = "flex item-center jusity-center bg-gray-100 p-4 rounded-lg";
-    // vì trong thẻ li có 2 thẻ div con
-    // => b1 tạo element div
-    // => b2 appendchild để add div vào li
-    const divInfo = document.createElement("div");
+    const filteredTasks = filterTasksByStatus();
+    todoList.innerHTML = "";
 
-    const checkBox = document.createElement("input");
-    checkBox.type = "checkbox";
-    checkBox.className = "mr-2";
-    // todo: thêm sự kiện cho checkbox
-    divInfo.appendChild(checkBox);
+    for (let i = 0; i < filteredTasks.length; i++) {
+        const taskItem = filteredTasks[i];
+        const li = document.createElement(`li`);
+        li.className = "flex item-center jusity-center bg-gray-100 p-4 rounded-lg";
 
-    const span = document.createElement("span");
-    span.className = "font-semibold";
-    span.innerText = `${lisTasks[i].id} - ${lisTasks[i].name}`; //listTasks[i] = task("ID-1","Implement login", "todo")
-    divInfo.appendChild(span);
+        const divInfo = document.createElement("div");
 
-    li.appendChild(divInfo);
+        const checkBox = document.createElement("input");
+        checkBox.type = "checkbox";
+        checkBox.className = "mr-2";
+        divInfo.appendChild(checkBox);
 
-    const divActions = document.createElement("div");
-    const btnEdit = document.createElement("button");
-    btnEdit.className = "p-2 bg-yellow-500 text-white rounded-md mr-2";
-    btnEdit.innerText = "sửa";
-    // append function để handle logic sửa task
-    divActions.appendChild(btnEdit);
+        const span = document.createElement("span");
+        span.className = "font-semibold";
+        span.innerText = `${taskItem.id} - ${taskItem.name}`;
+        divInfo.appendChild(span);
 
-    const btnDelete = document.createElement("button");
-    btnDelete.className = "p-2 bg-red-500 text-white rounded-md ";
-    btnDelete.innerText =" xóa";
-    // append function để handle logic xóa task
-    divActions.appendChild(btnDelete);
+        li.appendChild(divInfo);
 
-    li.appendChild(divActions);
+        const divActions = document.createElement("div");
+        const btnEdit = document.createElement("button");
+        btnEdit.className = "p-2 bg-yellow-500 text-white rounded-md mr-2";
+        btnEdit.innerText = "sửa";
+        divActions.appendChild(btnEdit);
 
-    document.getElementById("todoList").appendChild(li);
+        const btnDelete = document.createElement("button");
+        btnDelete.className = "p-2 bg-red-500 text-white rounded-md ";
+        btnDelete.innerText = " xóa";
+        divActions.appendChild(btnDelete);
 
-    // handle hidden icon " không có task nào"
+        li.appendChild(divActions);
+
+        todoList.appendChild(li);
+    }
+
     const noTaskDiv = document.getElementById("emptyState");
-    // dùng toán tử 3 ngôi để render
-    noTaskDiv.style.display = lisTasks.length ? "none": "block";
-    // 0: flase > 0: true
-    
-  }
+    if (noTaskDiv) {
+        noTaskDiv.style.display = filteredTasks.length ? "none" : "block";
+    }
 };
-renderTasks();
 
 // tạo task mới
 
@@ -155,8 +145,9 @@ renderTasks(); // re-render danh sách công việc
 taskInput.value = "";
 };
 
-
-
 //  update status công việc
 
 // xóa danh sách công việc
+
+initFilterButtons();
+renderTasks();
