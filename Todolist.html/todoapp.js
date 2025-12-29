@@ -49,9 +49,7 @@ const btnAll = document.querySelectorAll(".filter-btn");
 // hàm hiển thị danh sách công việc
 const renderTasks = () => {
 
-    let filterTask = filterTasksByStatus();
-    const todoListElement = document.getElementById("todoList");
-    todoListElement.innerHTML = "";
+   let filterTask = filterTasksByStatus();
   //   const li = document.createElement(`li`);
   // li.innerHTML = `<li class="flex item-center jusity-center bg-gray-100 p-4 rounded-lg">
   //                 <span class="font-semibold">[ID-1] Implement login</span>
@@ -63,7 +61,7 @@ const renderTasks = () => {
   //             let ul = document.getElementById("todolist");
   //             ul.appendChild(li);
   // //  render list task
-    for (let i = 0; i < filterTask.length; i++) {
+  for (let i = 0; i < filterTask.length; i++) {
     const li = document.createElement(`li`);
     //  => <li></li>
     // <li class="flex item-center jusity-center bg-gray-100 p-4 rounded-lg">
@@ -90,7 +88,7 @@ const renderTasks = () => {
 
     const span = document.createElement("span");
     span.className = "font-semibold";
-    span.innerText = `${filterTask[i].id} - ${filterTask[i].name}`; //listTasks[i] = task("ID-1","Implement login", "todo")
+    span.innerText = `${lisTasks[i].id} - ${lisTasks[i].name}`; //listTasks[i] = task("ID-1","Implement login", "todo")
     divInfo.appendChild(span);
 
     li.appendChild(divInfo);
@@ -110,15 +108,15 @@ const renderTasks = () => {
 
     li.appendChild(divActions);
 
-        todoListElement.appendChild(li);
-
-  }
+    document.getElementById("todoList").appendChild(li);
 
     // handle hidden icon " không có task nào"
     const noTaskDiv = document.getElementById("emptyState");
     // dùng toán tử 3 ngôi để render
-    noTaskDiv.style.display = filterTask.length ? "none": "block";
+    noTaskDiv.style.display = lisTasks.length ? "none": "block";
     // 0: flase > 0: true
+    
+  }
 };
 initFilterButtons();
 renderTasks();
