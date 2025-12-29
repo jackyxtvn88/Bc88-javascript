@@ -23,15 +23,13 @@ let currentFilter = "all"; // trạng thái lọc hiện tại
 
 // filter công việc theo trạng thái: tất cả, chưa hoàn thành, đã hoàn thành
 const filterTasksByStatus = () => {
-    // học OOP để có thể lưu trữ dữ liệu của task: id, tên công việc, trạng thái
-    //  kết hợp với hàm filter của mảng
-    if (currentFilter === "active") {
-        return lisTasks.filter((taskItem) => taskItem.status !== "done");
+    if (currentFilter === "active"){
+        return lisTasks.filter((task) => task.status !== "completed");
     }
-    if (currentFilter === "completed") {
-        return lisTasks.filter((taskItem) => taskItem.status === "done");
+    if (currentFilter === "completed"){
+        return lisTasks.filter((task) => task.status === "completed");
     }
-    return lisTasks;
+    return lisTasks; //all
 }
 const initFilterButtons = () => {
 const btnAll = document.querySelectorAll(".filter-btn");
@@ -50,6 +48,7 @@ const btnAll = document.querySelectorAll(".filter-btn");
 
 // hàm hiển thị danh sách công việc
 const renderTasks = () => {
+
     let filterTask = filterTasksByStatus();
     const todoListElement = document.getElementById("todoList");
     todoListElement.innerHTML = "";
@@ -86,7 +85,6 @@ const renderTasks = () => {
     const checkBox = document.createElement("input");
     checkBox.type = "checkbox";
     checkBox.className = "mr-2";
-    checkBox.checked = filterTask[i].status === "done";
     // todo: thêm sự kiện cho checkbox
     divInfo.appendChild(checkBox);
 
@@ -113,15 +111,17 @@ const renderTasks = () => {
     li.appendChild(divActions);
 
         todoListElement.appendChild(li);
+
   }
+
     // handle hidden icon " không có task nào"
     const noTaskDiv = document.getElementById("emptyState");
     // dùng toán tử 3 ngôi để render
     noTaskDiv.style.display = filterTask.length ? "none": "block";
     // 0: flase > 0: true
 };
-renderTasks();
 initFilterButtons();
+renderTasks();
 
 // tạo task mới
 
@@ -151,6 +151,7 @@ btnAdd.onclick = () => {
 //     renderTasks();
 // }, 2000;
 // );
+document.getElementById("todoList").innerHTML = ""
 renderTasks(); // re-render danh sách công việc
 
 // bước 4: xóa giá trị trong thẻ input sau khi thêm công việc
