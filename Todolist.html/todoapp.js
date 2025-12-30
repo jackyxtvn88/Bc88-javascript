@@ -1,17 +1,17 @@
-// =======================
-// 1) Tạo class Task (đối tượng công việc)
-// =======================
+// =============================
+// 1) TẠO ĐỐI TƯỢNG TASK
+// =============================
 class Task {
   constructor(id, name, status) {
-    this.id = id;       // mã ID của task (VD: ID-1)
-    this.name = name;   // tên công việc (VD: Implement login)
-    this.status = status; // trạng thái: todo / inprogress / done
+    this.id = id;       // ID công việc (VD: ID-1)
+    this.name = name;   // Tên công việc
+    this.status = status; // Trạng thái: todo / inprogress / done
   }
 }
 
-// =======================
-// 2) Mảng chứa danh sách công việc (dữ liệu ban đầu)
-// =======================
+// =============================
+// 2) MẢNG LƯU DANH SÁCH TASK
+// =============================
 let listTasks = [
   new Task("ID-1", "Implement login", "todo"),
   new Task("ID-2", "Design database schema", "inprogress"),
@@ -19,86 +19,77 @@ let listTasks = [
 ];
 
 // currentFilter dùng để lưu trạng thái lọc hiện tại
-// có thể là: all / active / completed
+// all: tất cả
+// active: chưa hoàn thành (status != done)
+// completed: đã hoàn thành (status == done)
 let currentFilter = "all";
 
-// =======================
-// 3) Hàm lọc task theo trạng thái
-// =======================
-// all: hiển thị tất cả
-// active: hiển thị task chưa done
-// completed: hiển thị task done
+// =============================
+// 3) HÀM FILTER TASK THEO STATUS
+// =============================
 const filterTasksByStatus = () => {
-  // active = những task chưa hoàn thành
   if (currentFilter === "active") {
+    // active: những task chưa done
     return listTasks.filter(task => task.status !== "done");
   }
 
-  // completed = những task đã hoàn thành
   if (currentFilter === "completed") {
+    // completed: những task done
     return listTasks.filter(task => task.status === "done");
   }
 
-  // all = trả về toàn bộ list
+  // all: trả về tất cả
   return listTasks;
 };
 
-// =======================
-// 4) Khởi tạo các nút filter (All / Active / Completed)
-// =======================
+// =============================
+// 4) KHỞI TẠO BUTTON FILTER
+// =============================
 const initFilterButtons = () => {
-  // lấy tất cả các button có class filter-btn
   const btnAll = document.querySelectorAll(".filter-btn");
 
-  // gắn sự kiện click cho từng nút
   btnAll.forEach(btn => {
     btn.onclick = () => {
-      // lấy trạng thái lọc từ data-filter (VD: all, active, completed)
+      // lấy trạng thái filter từ data-filter của button
       currentFilter = btn.dataset.filter;
 
-      // render lại danh sách sau khi đổi filter
+      // render lại danh sách khi đổi filter
       renderTasks();
     };
   });
 };
 
-// =======================
-// 5) Hàm render danh sách công việc ra HTML
-// =======================
+// =============================
+// 5) HÀM HIỂN THỊ DANH SÁCH TASK
+// =============================
 const renderTasks = () => {
   const todoListElement = document.getElementById("todoList");
 
-  // reset danh sách trước khi render lại (tránh bị lặp)
+  // clear danh sách trước khi render (tránh lặp)
   todoListElement.innerHTML = "";
 
-  // lấy danh sách task đã được lọc
+  // lấy danh sách task sau khi lọc
   const filterTask = filterTasksByStatus();
 
-  // =======================
-  // 5.1) Tính toán số lượng task để hiển thị count
-  // =======================
+  // =========================
+  // 5.1) TÍNH TOÁN COUNT TASK
+  // =========================
   const totalCount = listTasks.length;
   const activeCount = listTasks.filter(task => task.status !== "done").length;
   const completedCount = listTasks.filter(task => task.status === "done").length;
 
-  // update lên giao diện
   document.getElementById("totalCount").innerText = totalCount;
   document.getElementById("activeCount").innerText = activeCount;
   document.getElementById("completedCount").innerText = completedCount;
 
-  // =======================
-  // 5.2) Render từng task thành thẻ <li>
-  // =======================
+  // =========================
+  // 5.2) RENDER TASK
+  // =========================
   filterTask.forEach(task => {
     const li = document.createElement("li");
+    li.className = "flex items-center justify-between bg-gray-100 p-4 rounded-lg mb-2";
 
-    // thêm class cho đẹp
-    li.className =
-      "flex items-center justify-between bg-gray-100 p-4 rounded-lg mb-2";
-
-    // =======================
-    // Bên trái: checkbox + tên task
-    // =======================
+    // ---- DIV BÊN TRÁI (checkbox + text)
     const divInfo = document.createElement("div");
     divInfo.className = "flex items-center";
 
@@ -107,39 +98,28 @@ const renderTasks = () => {
     checkBox.type = "checkbox";
     checkBox.className = "mr-2";
 
-    // nếu task đã done thì checkbox tick sẵn
+    // nếu task done thì checkbox sẽ tick sẵn
     checkBox.checked = task.status === "done";
 
-    // khi click checkbox -> cập nhật status
+    // khi click checkbox -> đổi trạng thái
     checkBox.onchange = () => {
-      // tìm task trong listTasks theo id
-      const taskFound = listTasks.find(t => t.id === task.id);
-
-      if (taskFound) {
-        // nếu checkbox được tick -> done
-        // nếu bỏ tick -> todo
-        taskFound.status = checkBox.checked ? "done" : "todo";
-
-        // render lại danh sách sau khi đổi trạng thái
-        renderTasks();
-      }
+      task.status = checkBox.checked ? "done" : "todo";
+      renderTasks(); // render lại UI sau khi thay đổi
     };
 
-    // tạo span hiển thị ID và name task
+    // tạo text hiển thị task
     const span = document.createElement("span");
     span.className = "font-semibold";
     span.innerText = `${task.id} - ${task.name}`;
 
-    // append checkbox và span vào divInfo
+    // add checkbox + span vào divInfo
     divInfo.appendChild(checkBox);
     divInfo.appendChild(span);
 
-    // append divInfo vào li
+    // add divInfo vào li
     li.appendChild(divInfo);
 
-    // =======================
-    // Bên phải: nút sửa và xóa
-    // =======================
+    // ---- DIV BÊN PHẢI (edit + delete)
     const divActions = document.createElement("div");
 
     // nút sửa
@@ -147,101 +127,81 @@ const renderTasks = () => {
     btnEdit.className = "p-2 bg-yellow-500 text-white rounded-md mr-2";
     btnEdit.innerText = "Sửa";
 
-    // click sửa -> gọi hàm editTask
-    btnEdit.onclick = () => editTask(task.id);
+    // logic sửa task
+    btnEdit.onclick = () => {
+      const newName = prompt("Nhập tên mới:", task.name);
+      if (newName && newName.trim() !== "") {
+        task.name = newName.trim();
+        renderTasks();
+      }
+    };
 
     // nút xóa
     const btnDelete = document.createElement("button");
     btnDelete.className = "p-2 bg-red-500 text-white rounded-md";
     btnDelete.innerText = "Xóa";
 
-    // click xóa -> gọi hàm deleteTask
-    btnDelete.onclick = () => deleteTask(task.id);
+    // logic xóa task
+    btnDelete.onclick = () => {
+      const confirmDelete = confirm("Bạn có chắc chắn muốn xóa?");
+      if (confirmDelete) {
+        listTasks = listTasks.filter(t => t.id !== task.id);
+        renderTasks();
+      }
+    };
 
-    // append 2 nút vào divActions
     divActions.appendChild(btnEdit);
     divActions.appendChild(btnDelete);
 
-    // append divActions vào li
     li.appendChild(divActions);
 
-    // append li vào ul
+    // add li vào ul
     todoListElement.appendChild(li);
   });
 
-  // =======================
-  // 5.3) Hiển thị trạng thái "Không có công việc" nếu list rỗng
-  // =======================
+  // =========================
+  // 5.3) HIỂN THỊ EMPTY STATE
+  // =========================
   const noTaskDiv = document.getElementById("emptyState");
+
+  // nếu danh sách rỗng => hiện emptyState
+  // nếu có task => ẩn emptyState
   noTaskDiv.style.display = filterTask.length === 0 ? "block" : "none";
 };
 
-// =======================
-// 6) Thêm task mới (Add Task)
-// =======================
+// =============================
+// 6) THÊM TASK MỚI
+// =============================
 const btnAdd = document.getElementById("addBtn");
+
 btnAdd.onclick = () => {
   const taskInput = document.getElementById("todoInput");
-
-  // lấy giá trị người dùng nhập
   const newTaskName = taskInput.value.trim();
 
-  // nếu input rỗng thì báo lỗi
+  // nếu input rỗng => báo lỗi
   if (!newTaskName) {
     alert("Vui lòng nhập công việc!");
     return;
   }
 
-  // tạo id mới dựa vào độ dài mảng hiện tại
+  // tạo id mới dựa theo số lượng task
   const newID = `ID-${listTasks.length + 1}`;
 
-  // tạo đối tượng task mới
+  // tạo task mới
   const newTaskObj = new Task(newID, newTaskName, "todo");
 
-  // thêm task vào listTasks
+  // thêm task vào mảng
   listTasks.push(newTaskObj);
 
   // reset input
   taskInput.value = "";
 
-  // render lại danh sách
+  // render lại UI
   renderTasks();
 };
 
-// =======================
-// 7) Sửa task (Edit Task)
-// =======================
-const editTask = (id) => {
-  // tìm task theo id
-  const taskFound = listTasks.find(task => task.id === id);
-  if (!taskFound) return;
-
-  // prompt để nhập tên mới
-  const newName = prompt("Nhập tên công việc mới:", taskFound.name);
-
-  // nếu người dùng nhập hợp lệ thì update
-  if (newName && newName.trim() !== "") {
-    taskFound.name = newName.trim();
-    renderTasks();
-  }
-};
-
-// =======================
-// 8) Xóa task (Delete Task)
-// =======================
-const deleteTask = (id) => {
-  // confirm trước khi xóa
-  const confirmDelete = confirm("Bạn có chắc chắn muốn xóa?");
-  if (!confirmDelete) return;
-
-  // lọc bỏ task có id tương ứng
-  listTasks = listTasks.filter(task => task.id !== id);
-
-  renderTasks();
-};
-
-// =======================
-// 9) Khởi tạo ban đầu
-// =======================
-initFilterButtons(); // setup filter buttons
-renderTasks();       // render danh sách lần đầu
+// =============================
+// 7) INIT APP
+// =============================
+initFilterButtons();
+renderTasks();
